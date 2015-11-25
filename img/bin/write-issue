@@ -1,0 +1,11 @@
+#! /bin/bash
+
+cat <<EOF > /etc/issue
+Hello on $(date)!
+
+Running:
+  - $(uname -a)
+Nerwork:
+  - $(ip addr show eth0 | awk '/inet / {print $2}')
+
+EOF

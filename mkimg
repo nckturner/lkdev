@@ -25,13 +25,8 @@ readonly PACKAGES=(
   "telnet"
 )
 
-# Build a Wheezy chroot. Install an sshd, since it will be handy
-# later.
-sudo rm -rf "${DEB_RELEASE}"
-mkdir "${DEB_RELEASE}"
+mkdir -p "${DEB_RELEASE}"
 sudo debootstrap --verbose --include=$(util::join "," "${PACKAGES[@]}") "${DEB_RELEASE}" "${DEB_RELEASE}/" "${DEB_MIRROR}"
-
-# Perform some manual cleanup on the resulting chroot:
 
 # Make root passwordless for convenience.
 sudo sed -i '/^root/ { s/:x:/::/ }' "${DEB_RELEASE}/etc/passwd"
@@ -40,10 +35,16 @@ echo 'V0:23:respawn:/sbin/getty 115200 hvc0' | sudo tee -a "${DEB_RELEASE}/etc/i
 # Automatically bring up eth0 using DHCP
 printf '\nauto eth0\niface eth0 inet dhcp\n' | sudo tee -a "${DEB_RELEASE}/etc/network/interfaces"
 # Set up my ssh pubkey for root in the VM
-sudo mkdir "${DEB_RELEASE}/root/.ssh/"
+sudo mkdir -p "${DEB_RELEASE}/root/.ssh/"
 cat ~/.ssh/id_?sa.pub | sudo tee "${DEB_RELEASE}"/root/.ssh/authorized_keys
+# Add our units and helper scripts
+sudo cp img/bin/* "${DEB_RELEASE}/usr/local/bin"
+for unit in $(ls img/units/); do
+  sudo cp "img/units/$unit" "${DEB_RELEASE}/etc/systemd/system"
+  sudo chroot "${DEB_RELEASE}" /bin/bash -c "systemctl enable $unit"
+done
 
-# Build a disk image
+
 dd if=/dev/zero of="${DEB_RELEASE}.img" bs=1M seek=4095 count=1
 mkfs.ext4 -F "${DEB_RELEASE}.img"
 sudo mkdir -p "/mnt/${DEB_RELEASE}"

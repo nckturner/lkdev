@@ -14,7 +14,7 @@ DEBUG_OPTS="-S -gdb tcp::27467"
 MACADDR="52:54:00:$(dd if=/dev/urandom bs=512 count=1 2>/dev/null | md5sum | sed 's/^\(..\)\(..\)\(..\).*$/\1:\2:\3/')"
 
 CPU_OPTS="-smp 2"
-MEMORY_OPTS="-m 512"
+MEMORY_OPTS="-m 2048"
 NET_OPTS="-netdev tap,id=net0 -device e1000,netdev=net0,mac=${MACADDR}"
 
 while getopts ":d" opt; do
