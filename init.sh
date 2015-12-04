@@ -18,4 +18,4 @@ mount -o rw /dev/sda /mnt/root || rescure_shell
 umount /proc
 umount /sys
 
-exec switch_root /mnt/root /sbin/init
+exec switch_root /mnt/root /sbin/init || rescue_shell

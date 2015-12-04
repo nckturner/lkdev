@@ -6,7 +6,7 @@ set -o pipefail
 
 KERNEL="../linux/arch/x86_64/boot/bzImage"
 INITRD="initramfs.cpio.gz"
-ROOTFS="jessie.img"
+ROOTFS="base.img"
 
 CMDLINE="root=/dev/sda console=ttyS0"
 

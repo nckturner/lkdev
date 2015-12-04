@@ -1,5 +1,5 @@
-jessie
-jessie.img
+base
+base.img
 initfs/
 initramfs.cpio.gz
 
