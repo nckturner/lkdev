@@ -25,17 +25,30 @@ readonly PACKAGES=(
   "iptables"
   "bridge-utils"
   "telnet"
-  "clang"
   "git"
   "bc"
   "libelf-dev"
   "libdw-dev"
   "ninja-build"
   "build-essential"
+  "bison"
+  "cmake"
+  "flex"
+  "libedit-dev"
+  "libllvm3.7"
+  "llvm-3.7-dev"
+  "libclang-3.7-dev"
+  "python"
+  "zlib1g-dev"
 )
 
 mkdir -p "${BASE_TARGET_DIR}"
 sudo debootstrap --verbose --include=$(util::join "," "${PACKAGES[@]}") "${DEB_RELEASE}" "${BASE_TARGET_DIR}/" "${DEB_MIRROR}"
+
+# debootstrap isn't cleaning up
+sudo umount /home/mikedanese/lkdev/base/proc/sys/fs/binfmt_misc || :
+sudo umount /home/mikedanese/lkdev/base/proc || :
+
 
 # Make root passwordless for convenience.
 sudo sed -i '/^root/ { s/:x:/::/ }' "${BASE_TARGET_DIR}/etc/passwd"
@@ -58,9 +71,15 @@ sudo rm -rf "${BASE_TARGET_DIR}/lib/modules"
 sudo make -C "${KDIR}" INSTALL_MOD_PATH="${PWD}/${BASE_TARGET_DIR}" modules_install
 sudo make -C "${KDIR}" INSTALL_HDR_PATH="${PWD}/${BASE_TARGET_DIR}/usr" headers_install
 
-dd if=/dev/zero of="${BASE_TARGET_DIR}.img" bs=1M seek=4095 count=1
-mkfs.ext4 -F "${BASE_TARGET_DIR}.img"
+sudo qemu-nbd -c /dev/nbd0 base.qcow2
+yes | sudo mkfs.ext4 /dev/nbd0
+
 sudo mkdir -p "/mnt/${BASE_TARGET_DIR}"
-sudo mount -o loop "${BASE_TARGET_DIR}.img" "/mnt/${BASE_TARGET_DIR}"
+sudo mount /dev/nbd0 "/mnt/${BASE_TARGET_DIR}"
+
 sudo cp -a "${BASE_TARGET_DIR}/." "/mnt/${BASE_TARGET_DIR}/."
+
+exit 100
+
 sudo umount "/mnt/${BASE_TARGET_DIR}"
+sudo qemu-nbd -d /dev/nbd0

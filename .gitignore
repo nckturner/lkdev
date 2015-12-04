@@ -1,5 +1,6 @@
 base
 base.img
+base.qcow2
 initfs/
 initramfs.cpio.gz
 
