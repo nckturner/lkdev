@@ -1,11 +1,14 @@
 #! /bin/bash
 
-cat <<EOF > /etc/issue
+while :;
+  cat <<EOF > /etc/issue
 Hello on $(date)!
 
 Running:
   - $(uname -a)
 Nerwork:
-  - $(ip addr show eth0 | awk '/inet / {print $2}')
+  - $(ip addr show enp0s4 | awk '/inet / {print $2}')
 
 EOF
+  sleep 2;
+done;

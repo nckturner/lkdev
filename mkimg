@@ -41,8 +41,8 @@ sudo debootstrap --verbose --include=$(util::join "," "${PACKAGES[@]}") "${DEB_R
 sudo sed -i '/^root/ { s/:x:/::/ }' "${BASE_TARGET_DIR}/etc/passwd"
 # Add a getty on the virtio console
 echo 'V0:23:respawn:/sbin/getty 115200 hvc0' | sudo tee -a "${BASE_TARGET_DIR}/etc/inittab"
-# Automatically bring up eth0 using DHCP
-printf '\nauto eth0\niface eth0 inet dhcp\n' | sudo tee -a "${BASE_TARGET_DIR}/etc/network/interfaces"
+# Automatically bring up enp0s4 using DHCP
+printf '\nsource-directory /etc/network/interfaces.d\n\nauto enp0s4\niface enp0s4 inet dhcp\n' | sudo tee "${BASE_TARGET_DIR}/etc/network/interfaces"
 # Set up my ssh pubkey for root in the VM
 sudo mkdir -p "${BASE_TARGET_DIR}/root/.ssh/"
 cat ~/.ssh/id_?sa.pub | sudo tee "${BASE_TARGET_DIR}"/root/.ssh/authorized_keys
