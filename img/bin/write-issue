@@ -1,6 +1,6 @@
 #! /bin/bash
 
-while :;
+while :; do
   cat <<EOF > /etc/issue
 Hello on $(date)!
 

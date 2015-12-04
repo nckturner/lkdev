@@ -2,7 +2,7 @@
 Description=Write a useful /etc/issue
 
 [Service]
-Type=oneshot
+Type=simple
 ExecStart=/usr/local/bin/write-issue
 
 [Install]
