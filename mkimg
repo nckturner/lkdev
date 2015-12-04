@@ -12,6 +12,7 @@ function util::join() {
 }
 
 readonly DEB_RELEASE="jessie"
+readonly KDIR="../linux"
 readonly DEB_MIRROR="http://ftp.us.debian.org/debian/ "
 readonly PACKAGES=(
   "openssh-server"
@@ -23,6 +24,7 @@ readonly PACKAGES=(
   "iptables"
   "bridge-utils"
   "telnet"
+  "build-essential"
 )
 
 mkdir -p "${DEB_RELEASE}"
@@ -44,6 +46,8 @@ for unit in $(ls img/units/); do
   sudo chroot "${DEB_RELEASE}" /bin/bash -c "systemctl enable $unit"
 done
 
+# kernel modules
+sudo make -C "${KDIR}" INSTALL_MOD_PATH="${PWD}/${DEB_RELEASE}" modules_install
 
 dd if=/dev/zero of="${DEB_RELEASE}.img" bs=1M seek=4095 count=1
 mkfs.ext4 -F "${DEB_RELEASE}.img"
