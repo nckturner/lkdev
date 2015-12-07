@@ -6,7 +6,7 @@ function util::trap_add_handler() {
   local cmd="$@"
   local current="$(trap -p ${trap_sig} | awk -F\' '{print $2}')"
   if [[ ! -z "${current}" ]]; then
-    let cmd="${current};${cmd}"
+    cmd="${current};${cmd}"
   fi
   trap -- "${cmd}" "${trap_sig}"
 }
