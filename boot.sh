@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-KERNEL="../linux/arch/x86_64/boot/bzImage"
+KERNEL="../linux/build/arch/x86_64/boot/bzImage"
 INITRD="initramfs.cpio.gz"
 ROOTFS="base.qcow2"
 

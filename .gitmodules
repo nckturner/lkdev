@@ -1,0 +1,3 @@
+[submodule "home/perf-tools"]
+	path = home/perf-tools
+	url = git@github.com:brendangregg/perf-tools.git

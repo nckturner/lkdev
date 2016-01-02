@@ -5,15 +5,15 @@ set -o nounset
 set -o pipefail
 
 rescue_shell() {
-    echo "Something went wrong. Dropping to a shell."
-    exec sh
+  echo "Something went wrong. Dropping to a shell."
+  exec sh
 }
 
 mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t devtmpfs none /dev
 
-mount -o rw /dev/sda /mnt/root || rescure_shell
+mount -o rw /dev/sda /mnt/root || rescue_shell
 
 umount /proc
 umount /sys

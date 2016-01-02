@@ -17,3 +17,24 @@ function util::defer() {
   util::trap_add_handler "SIGINT"  "${cmd}"
   util::trap_add_handler "SIGTERM" "${cmd}"
 }
+
+function util::print_stack {
+  local frame=0
+  while caller $frame; do
+    ((frame++));
+  done
+}
+
+function util::start_trace() {
+  PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+  set -o xtrace
+}
+function util::start_trace() {
+  set +o xtrace
+}
+
+function util::join() {
+  local IFS="$1"
+  shift
+  echo "$*"
+}

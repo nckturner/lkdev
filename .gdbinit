@@ -4,7 +4,4 @@ echo + target remote localhost:27467
 
 target remote localhost:27467
 
-echo + symbol-file ../linux/vmlinux
-
-symbol-file ../linux/vmlinux
-
+echo + symbol-file ../linux/build/vmlinux
