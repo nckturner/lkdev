@@ -48,7 +48,6 @@ readonly BUILD_PACKAGES=(
   "zlib1g-dev"
 )
 
-
 mkdir -p "${BASE_TARGET_DIR}"
 
 sudo debootstrap --verbose --include=$(util::join "," "${PACKAGES[@]}") "${DEB_RELEASE}" "${BASE_TARGET_DIR}/" "${DEB_MIRROR}"
@@ -71,17 +70,18 @@ done
 
 # kernel modules
 sudo rm -rf "${BASE_TARGET_DIR}/lib/modules"
-sudo make -C "${KDIR}" INSTALL_MOD_PATH="${PWD}/${BASE_TARGET_DIR}" modules_install
-sudo make -C "${KDIR}" INSTALL_HDR_PATH="${PWD}/${BASE_TARGET_DIR}/usr" headers_install
+sudo make -C "${KDIR}" O="${KBUILD_OUTPUT}" INSTALL_MOD_PATH="${PWD}/${BASE_TARGET_DIR}" modules_install
+sudo make -C "${KDIR}" O="${KBUILD_OUTPUT}" INSTALL_HDR_PATH="${PWD}/${BASE_TARGET_DIR}/usr" headers_install
 
 util::start_trace
 
 qemu-img create -f qcow2 -o preallocation=metadata base.qcow2 20G
 
+sudo modprobe nbd
 sudo qemu-nbd -c /dev/nbd0 base.qcow2
 util::defer sudo qemu-nbd -d /dev/nbd0
 
-sudo mkfs.ext4 -F /dev/nbd0
+sudo mkfs.ext4 -F /dev/nbd0 || true
 
 sudo mkdir -p "/mnt/${BASE_TARGET_DIR}"
 
