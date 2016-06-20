@@ -1,5 +1,0 @@
-#! /bin/bash
-
-# run in mount namespace
-
-sudo -E unshare --mount -- /bin/bash -c "sudo mount --make-rprivate / && $1"
