@@ -13,8 +13,8 @@ $(TMP)/ubuntu-$(IMAGE_VERSION).qcow2:
 $(TMP)/ubuntu.qcow2: $(TMP)/ubuntu-$(IMAGE_VERSION).qcow2
 	cp "$<" "$@"
 
-$(TMP)/initramfs.cpio.gz: mkinitrd init.sh $(TMP)/modules.tar $(TMP)/headers.tar $(TMP)/base.tar
-	./mkinitrd
+$(TMP)/initramfs.cpio.gz: initramfs/*
+	$(MAKE) -C initramfs/
 
 $(TMP)/modules.tar:
 	mkdir -p $(TMP)/modules/
