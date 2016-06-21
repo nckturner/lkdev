@@ -1,5 +1,5 @@
 
-IMAGE_VERSION = 16.04
+IMAGE_VERSION ?= 15.10
 IMAGE = ubuntu-$(IMAGE_VERSION)-server-cloudimg-amd64-disk1.img
 IMAGE_CDN_URL = https://uec-images.ubuntu.com/releases/${IMAGE_VERSION}/release/${IMAGE}
 TMP = .tmp
@@ -7,10 +7,10 @@ TMP = .tmp
 default: boot
 .PHONY += boot
 
-$(TMP)/ubuntu-orig.qcow2:
+$(TMP)/ubuntu-$(IMAGE_VERSION).qcow2:
 	curl -sSL --fail -o "$@" "${IMAGE_CDN_URL}"
 
-$(TMP)/ubuntu.qcow2: $(TMP)/ubuntu-orig.qcow2
+$(TMP)/ubuntu.qcow2: $(TMP)/ubuntu-$(IMAGE_VERSION).qcow2
 	cp "$<" "$@"
 
 $(TMP)/initramfs.cpio.gz: mkinitrd init.sh $(TMP)/modules.tar $(TMP)/headers.tar $(TMP)/base.tar
