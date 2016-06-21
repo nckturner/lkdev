@@ -42,9 +42,12 @@ boot: $(TMP)/ubuntu.qcow2 $(TMP)/initramfs.cpio.gz $(TMP)/seed.iso
 
 clean:
 	rm -rf \
+		$(TMP)/modules \
 		$(TMP)/modules.tar \
 		$(TMP)/headers.tar \
+		$(TMP)/headers \
 		$(TMP)/cloud-init.tar \
+		$(TMP)/cloud-init \
 		$(TMP)/initramfs.cpio.gz
 .PHONY += clean
 

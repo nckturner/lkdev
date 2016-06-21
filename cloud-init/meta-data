@@ -1,2 +1,10 @@
-instance-id: iid-local01
-local-hostname: cloudimg
+# vim: syntax=yaml
+instance-id: iid-datasource-none
+hostname: cloudimg
+network-interfaces: |
+  auto lo
+  iface lo inet loopback
+
+  auto enp0s4
+  iface enp0s4 inet dhcp
+

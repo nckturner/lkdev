@@ -20,9 +20,18 @@ for tarball in modules.tar headers.tar base.tar; do
   tar xfv "/opt/${tarball}" -C /mnt/root || rescue_shell
 done
 
+chroot /mnt/root useradd ubuntu \
+  --create-home \
+  --password "" \
+  --shell /bin/bash \
+  --base-dir /home/ \
+  || true
+
 umount /proc
 umount /sys
 
 sed -i '/^root/ { s/:x:/::/ }' "/mnt/root/etc/passwd"
+
+chroot /mnt/root/ chmod 755 /
 
 exec switch_root /mnt/root /sbin/init
