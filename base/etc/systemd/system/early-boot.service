@@ -1,0 +1,16 @@
+[Unit]
+Description=Early boot
+After=syslog.target fsck-root.service fsck@.service
+Before=sysinit.target shutdown.target
+DefaultDependencies=no
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/early-boot.sh
+
+StandardOutput=journal
+StandardError=journal+console
+
+[Install]
+WantedBy=sysinit.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Late boot
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/late-boot.sh
+
+StandardOutput=journal
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target

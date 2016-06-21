@@ -1,9 +1,0 @@
-#cloud-config
-# vim: syntax=yaml
-write_files:
-- path: /etc/sudoers.d/00_root
-  permissions: '0440'
-  owner: root:root
-  content: |
-    ubuntu    ALL=(ALL:ALL) ALL
-    root      ALL=(ALL:ALL) ALL

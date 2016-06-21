@@ -7,7 +7,6 @@ set -o pipefail
 KERNEL="../linux/build/arch/x86_64/boot/bzImage"
 INITRD=".tmp/initramfs.cpio.gz"
 ROOTFS=".tmp/ubuntu.qcow2"
-SEED=".tmp/seed.iso"
 
 CMDLINE="root=/dev/sda console=ttyS0"
 
@@ -37,7 +36,6 @@ kvm \
   -initrd "${INITRD}" \
   -append "${CMDLINE}" \
   -drive "file=${ROOTFS},index=0,media=disk" \
-  -drive "file=${SEED},index=1,if=virtio" \
   -fsdev "local,security_model=passthrough,id=fsdev0,path=${SHARED_VOLUME}" \
   -device "virtio-9p-pci,id=fs0,fsdev=fsdev0,mount_tag=hostshare" \
   ${NET_OPTS[@]} ${CPU_OPTS[@]} ${MEMORY_OPTS[@]} \

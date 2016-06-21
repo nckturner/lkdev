@@ -3,7 +3,6 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-set -o xtrace
 
 ROOT_DIR=".tmp/initfs"
 rm -rf "${ROOT_DIR}"

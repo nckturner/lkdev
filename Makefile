@@ -1,5 +1,5 @@
 
-IMAGE_VERSION ?= 15.10
+IMAGE_VERSION ?= 16.04
 IMAGE = ubuntu-$(IMAGE_VERSION)-server-cloudimg-amd64-disk1.img
 IMAGE_CDN_URL = https://uec-images.ubuntu.com/releases/${IMAGE_VERSION}/release/${IMAGE}
 TMP = .tmp
@@ -29,14 +29,11 @@ $(TMP)/headers.tar:
 $(TMP)/base.tar: $(shell find base/)
 	tar cvf $@ -C base/ .
 
-$(TMP)/seed.iso: cloud-init/meta-data cloud-init/user-data
-	genisoimage -output $@ -volid cidata -joliet -rock $^
-
-prepare: $(TMP)/ubuntu.qcow2 $(TMP)/initramfs.cpio.gz $(TMP)/seed.iso
+prepare: $(TMP)/ubuntu.qcow2 $(TMP)/initramfs.cpio.gz
 .PHONY: prepare
 
 
-boot: $(TMP)/ubuntu.qcow2 $(TMP)/initramfs.cpio.gz $(TMP)/seed.iso
+boot: $(TMP)/ubuntu.qcow2 $(TMP)/initramfs.cpio.gz
 	sudo ./boot.sh $(EXTRA_ARGS)
 .PHONY += boot
 

@@ -17,15 +17,15 @@ mount -t devtmpfs none /dev
 mount -o rw /dev/sda1 /mnt/root || rescue_shell
 
 for tarball in modules.tar headers.tar base.tar; do
-  tar xfv "/opt/${tarball}" -C /mnt/root || rescue_shell
+  tar xf "/opt/${tarball}" -C /mnt/root || rescue_shell
 done
 
-chroot /mnt/root useradd ubuntu \
-  --create-home \
-  --password "" \
-  --shell /bin/bash \
-  --base-dir /home/ \
-  || true
+mount --bind /proc /mnt/root/proc
+mount --bind /sys  /mnt/root/sys
+mount --bind /dev  /mnt/root/dev
+
+chroot /mnt/root systemctl enable early-boot.service
+chroot /mnt/root systemctl enable late-boot.service
 
 umount /proc
 umount /sys
