@@ -18,7 +18,7 @@ SHARED_VOLUME="${HOME}"
 
 CPU_OPTS="-smp 2"
 MEMORY_OPTS="-m 2048"
-NET_OPTS="-netdev tap,id=net0 -device e1000,netdev=net0,mac=${MACADDR}"
+NET_OPTS="-netdev tap,id=net0,script=./net/qemu-ifup,downscript=./net/qemu-ifdown -device e1000,netdev=net0,mac=${MACADDR}"
 
 while getopts ":d" opt; do
   case $opt in

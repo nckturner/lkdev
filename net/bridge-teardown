@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ip link set virbr0 down
+ip link del virbr0
