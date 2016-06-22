@@ -4,10 +4,11 @@ After=multi-user.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/late-boot.sh
+ExecStartPre=/bin/mkdir -p /var/lib/ignition/late-boot
+ExecStart=/bin/run-parts /var/lib/ignition/late-boot
 
 StandardOutput=journal
-StandardError=journal+console
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target

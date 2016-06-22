@@ -27,7 +27,7 @@ $(TMP)/headers.tar:
 	tar cvf $@ -C $(TMP)/headers/ .
 
 
-$(TMP)/ignition.iso: ignition/*
+$(TMP)/ignition.iso: ignition/**
 	mkdir -p $(TMP)/ignition
 	jsonnet --multi $(TMP)/ignition ignition/all.jsonnet
 	genisoimage -output $@ -volid ignition -joliet -rock $(TMP)/ignition/*

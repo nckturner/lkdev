@@ -7,10 +7,11 @@ Conflicts=shutdown.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/early-boot.sh
+ExecStartPre=/bin/mkdir -p /var/lib/ignition/early-boot
+ExecStart=/bin/run-parts /var/lib/ignition/early-boot
 
 StandardOutput=journal
-StandardError=journal+console
+StandardError=journal
 
 [Install]
 WantedBy=sysinit.target
