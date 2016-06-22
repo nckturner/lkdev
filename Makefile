@@ -26,14 +26,17 @@ $(TMP)/headers.tar:
 	make -C ../linux/ headers_install INSTALL_HDR_PATH="$(PWD)/$(TMP)/headers/usr"
 	tar cvf $@ -C $(TMP)/headers/ .
 
-$(TMP)/base.tar: $(shell find base/)
-	tar cvf $@ -C base/ .
+
+$(TMP)/ignition.iso: ignition/*
+	mkdir -p $(TMP)/ignition
+	jsonnet --multi $(TMP)/ignition ignition/all.jsonnet
+	genisoimage -output $@ -volid ignition -joliet -rock $(TMP)/ignition/*
 
 prepare: $(TMP)/ubuntu.qcow2 $(TMP)/initramfs.cpio.gz
 .PHONY: prepare
 
 
-boot: $(TMP)/ubuntu.qcow2 $(TMP)/initramfs.cpio.gz
+boot: $(TMP)/ubuntu.qcow2 $(TMP)/initramfs.cpio.gz $(TMP)/ignition.iso
 	sudo ./boot.sh $(EXTRA_ARGS)
 .PHONY += boot
 
@@ -45,6 +48,7 @@ clean:
 		$(TMP)/headers \
 		$(TMP)/cloud-init.tar \
 		$(TMP)/cloud-init \
+		$(TMP)/initramfs \
 		$(TMP)/initramfs.cpio.gz
 .PHONY += clean
 

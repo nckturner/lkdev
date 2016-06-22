@@ -3,6 +3,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+set -x
 
 rescue_shell() {
   echo "Something went wrong. Dropping to a shell."
@@ -12,15 +13,26 @@ rescue_shell() {
 mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t devtmpfs none /dev
-
-
 mount -o rw /dev/sda1 /mnt/root || rescue_shell
 
-mount --bind /proc /mnt/root/proc
-mount --bind /sys  /mnt/root/sys
-mount --bind /dev  /mnt/root/dev
+IGNITION_LABEL="LABEL=\"ignition\""
 
-echo hi
+if blkid | grep -q "${IGNITION_LABEL}"; then
+  mount --bind /proc /mnt/root/proc
+  mount --bind /sys  /mnt/root/sys
+  mount --bind /dev  /mnt/root/dev
+  mkdir -p /mnt/root/var/lib/ignition
+  mount --bind /mnt/root/run /mnt/root/var/lib/ignition
+  mkdir -p /mnt/root/usr/share/oem
+  device="$(blkid | grep "${IGNITION_LABEL}" | awk -F':' '{print $1}')"
+  mount -t auto "${device}" /mnt/root/usr/share/oem
+  cp /bin/ignition /mnt/root/bin/ignition
+  chroot /mnt/root ignition --stage files --oem pxe -root /
+  rescue_shell
+  umount /mnt/root/proc
+  umount /mnt/root/sys
+  umount /mnt/root/dev
+fi
 
 umount /proc
 umount /sys
