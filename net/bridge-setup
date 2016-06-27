@@ -8,4 +8,4 @@ ip link set virbr0 up
 
 dnsmasq --interface=virbr0 --bind-interfaces --dhcp-range=172.18.0.2,172.18.255.254
 
-iptables -t nat -A POSTROUTING -o ens33 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o enp3s0f2 -j MASQUERADE
